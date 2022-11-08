@@ -72,10 +72,12 @@ routes.get("/v1/charges/:id/refunds", (req, res) => {
     return res.status(200).json(refundList);
 });
 routes.get("/v1/checkout/sessions/:id", (req, res) => {
+    console.log('-> GET /v1/checkout/sessions/:id')
     const session = checkout_sessions_1.checkout.sessions.retrieve(getRequestAccountId(req), req.params.id, "id");
     return res.status(200).json(session);
 });
 routes.post("/v1/checkout/sessions", (req, res) => {
+    console.log('-> POST /v1/checkout/sessions')
     const session = checkout_sessions_1.checkout.sessions.create(getRequestAccountId(req), req.body);
     return res.status(200).json(session);
 });
