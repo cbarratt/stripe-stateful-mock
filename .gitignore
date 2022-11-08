@@ -10,7 +10,7 @@ npm-debug.log*
 .idea/
 
 # Build output
-dist/
+# dist/
 
 # Environment variables for testing
 .env
