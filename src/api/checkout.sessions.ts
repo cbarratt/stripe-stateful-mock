@@ -30,6 +30,16 @@ export namespace checkout {
         });
       }
 
+      const lineItems = params.line_items.map((item) => {
+        return {
+          description: item?.price_data.product_data?.name || 'loldesc',
+          price: {
+            unit_amount: item.price_data.unit_amount
+          },
+          quantity: item.quantity
+        }
+      })
+
       const subtotal = params.line_items?.reduce((acc, item) => {
         const amount =
           item.amount ??
@@ -48,7 +58,7 @@ export namespace checkout {
         client_reference_id: params.client_reference_id ?? null,
         cancel_url: params.cancel_url,
         customer_email: params.customer_email ?? null,
-        customer: {
+        customer_details: {
           id: `cu_${generateId()}`,
           object: "customer",
           email: params.customer_email ?? null,
@@ -57,7 +67,7 @@ export namespace checkout {
         currency: "gbp",
         mode: params.mode ?? "payment",
         livemode: false,
-        line_items: (params.line_items as any) || [],
+        line_items: { data:(lineItems as any) } || {},
         locale: params.locale ?? "auto",
         metadata: stringifyMetadata(params.metadata),
         payment_status: "paid",
@@ -84,6 +94,7 @@ export namespace checkout {
       log.debug("checkout.session.retrieve", accountId, checkoutSessionId);
 
       const session = accountCheckoutSessions.get(accountId, checkoutSessionId);
+
       if (!session) {
         throw new RestError(404, {
           code: "resource_missing",
